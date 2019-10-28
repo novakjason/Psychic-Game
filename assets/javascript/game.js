@@ -1,4 +1,4 @@
-// Create array of alphabet.
+// create an array of the alphabet
 var letterList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 var guesses = [];
 var guessesLeft = 10;
@@ -6,63 +6,81 @@ var wins = 0;
 var losses = 0;
 var userGuess = document.onkeyup;
 
-// Create object to select computer's answer.
+// create function to select computer's answer using Math.random to select from the letter list array
 function compAnswer() {
     answer = letterList[Math.floor(Math.random() * letterList.length)];
     return answer;
 }
 
-// Create a function to move on to next round.
+// capturing computer's answer
+compAnswer();
+console.log(compAnswer());
+
+// create a function to start next round
 function nextRound() {
+
+    // clear guesses array
     guesses = [];
+    document.getElementById("guesses").innerHTML = guesses;
+
+    // reset ramaining guesses left
     guessesLeft = 10;
     document.getElementById("guesses-left").innerHTML = guessesLeft;
-    document.getElementById("guesses").innerHTML = guesses;
-    compAnswer();   //------nextRound function finishes with generating a new answer for user to guess.
-    //--- console.log(compAnswer()); //---Remove comments to see new answer.
+    
+    // generating a new answer for the new round
+    compAnswer();
 }
 
-
-// Capture user's guess and check against answer.
+// capture user's guess and check against computer's answer
 document.onkeyup = function (keypress) {
-    let userGuess = keypress.key;
-    
-    // Create a function to display user's wrong guesses in guesses element.
-    function displayGuesses() {
-        document.getElementById("guesses").innerHTML += " " + userGuess;  
-    }    
 
-    // Only run the code if a letter is chosen from letterList
+    // user's guess is a letter pressed on the keyboard
+    let userGuess = keypress.key;
+
+    // Create a function to display user's wrong guesses in guesses element
+    function displayGuesses() {
+        document.getElementById("guesses").innerHTML += userGuess + " ";
+    }
+
+    // verify the user's guess is a letter from the letter list
     for (var i = 0; i < letterList.length; i++) {
         if (userGuess === letterList[i]) {
-            
-            // If user's guess equals the answer, add 1 to wins and move to next round.
-            if (userGuess === answer)  {
+
+            // if user's guess equals the computer's answer...
+            if (userGuess === answer) {
+
+                // add 1 to wins
                 wins++;
                 document.getElementById("wins").innerHTML = wins;
+                
+                // alert user and move to next round
                 alert("You guessed right!  Press ok to move on to the next round.");
                 nextRound();
 
-                // If user's guess is wrong, push guessed letter to guesses array and subtract 1 guess from guesses left.        
-            } else if (userGuess !== answer) {
+              // if user's guess is wrong and has not already been guessed...          
+            } else if (userGuess !== answer && !guesses.includes(userGuess)) {
+
+                // subtract 1 guess from guesses left
                 guessesLeft--;
                 document.getElementById("guesses-left").innerHTML = guessesLeft;
+
+                // push guessed letter to guesses array
+                guesses.push(userGuess);
+
+                // then display the wrong guess to the user
                 displayGuesses();
 
-                // If user has no remaining guesses, add 1 to losses and move to next round.
-            } else {
-                // needs to be fixed.  as of now, user has unlimited guesses and can never lose.....
-                losses++;
-                document.getElementById("losses").innerHTML = losses;
-                console.log(losses);
-                nextRound();
-            }    
-        }    
-    }    
-}    
+            }
+        // if user has no remaining guesses...
+        } else if (guessesLeft < 1) {
 
+            // add 1 to losses
+            losses++;
+            document.getElementById("losses").innerHTML = losses;
 
-
-
-compAnswer();
-console.log(compAnswer());
+            // alert user and move to next round
+            alert("You ran out of guesses! Press ok to try again!");
+            nextRound();
+        }
+    }
+}
