@@ -14,7 +14,6 @@ function compAnswer() {
 
 // capturing computer's answer
 compAnswer();
-console.log(compAnswer());
 
 // create a function to start next round
 function nextRound() {
